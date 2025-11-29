@@ -1,0 +1,71 @@
+package com.Jesus.Ecommerce.Controllers;
+
+import com.Jesus.Ecommerce.DTOs.ItemCarrito.ItemCarritoRegistroDTO;
+import com.Jesus.Ecommerce.DTOs.ItemCarrito.ItemCarritoResponseDTO;
+import com.Jesus.Ecommerce.Modelos.ItemsCarrito;
+import com.Jesus.Ecommerce.Servicios.Impl.ItemCarritoServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+
+@RestController
+public class ItemCarritoControler {
+
+
+    @Autowired
+    private ItemCarritoServiceImpl itemCarritoServiceImpl;
+
+
+    //
+    // //
+    // // //  metodos Get
+    // //
+    //
+
+    @GetMapping("/itemcarrito")
+    public ResponseEntity<List<ItemCarritoResponseDTO>> obtenerItemCarrito(){
+        return ResponseEntity.ok(itemCarritoServiceImpl.getAllItemsProducto());
+    }
+
+    //
+    // //
+    // // //  metodos Post
+    // //
+    //
+
+    @PostMapping("/itemcarrito")
+    public ResponseEntity<ItemCarritoResponseDTO> AñadirItemCarrito(@Validated @RequestBody ItemCarritoRegistroDTO dto) {
+
+        return ResponseEntity.ok(itemCarritoServiceImpl.añadir(dto));
+    }
+
+    //
+    // //
+    // // //  metodos Put
+    // //
+    //
+
+    @PutMapping("/itemcarrito/{id}")
+    public ResponseEntity<ItemCarritoResponseDTO> ModificarItemCarrito(@Validated @PathVariable Integer id,@Validated @RequestBody ItemCarritoRegistroDTO dto) {
+
+        return ResponseEntity.ok(itemCarritoServiceImpl.modificar(id,dto));
+    }
+
+    //
+    // //
+    // // //  metodos Delete
+    // //
+    //
+
+    @DeleteMapping("/itemcarrito/{id}")
+    public ResponseEntity<Void>borrarItemCarrito(@PathVariable int id){
+
+        itemCarritoServiceImpl.eliminar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+}
