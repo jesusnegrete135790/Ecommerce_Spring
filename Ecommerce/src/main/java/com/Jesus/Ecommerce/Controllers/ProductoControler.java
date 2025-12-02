@@ -8,6 +8,7 @@ import com.Jesus.Ecommerce.Repositorios.ProductoRepository;
 import com.Jesus.Ecommerce.Servicios.Impl.ProductoServiceImpl;
 import com.Jesus.Ecommerce.Servicios.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -66,7 +67,7 @@ public class ProductoControler {
     @PostMapping("/producto")
     public ResponseEntity<ProductoResponseDTO> Añadir_prodiucto(@Validated @RequestBody ProductoRegistroDTO dto) {
 
-        return ResponseEntity.ok(productoServiceImpl.crearProducto(dto));
+         return ResponseEntity.status(HttpStatus.CREATED).body(productoServiceImpl.crearProducto(dto));
     }
 
     //

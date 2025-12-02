@@ -5,6 +5,7 @@ import com.Jesus.Ecommerce.DTOs.ItemCarrito.ItemCarritoResponseDTO;
 import com.Jesus.Ecommerce.Modelos.ItemsCarrito;
 import com.Jesus.Ecommerce.Servicios.Impl.ItemCarritoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +41,7 @@ public class ItemCarritoControler {
     @PostMapping("/itemcarrito")
     public ResponseEntity<ItemCarritoResponseDTO> AñadirItemCarrito(@Validated @RequestBody ItemCarritoRegistroDTO dto) {
 
-        return ResponseEntity.ok(itemCarritoServiceImpl.añadir(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(itemCarritoServiceImpl.añadir(dto));
     }
 
     //

@@ -8,6 +8,7 @@ import com.Jesus.Ecommerce.Repositorios.CategoriasRepository;
 import com.Jesus.Ecommerce.Servicios.Impl.CategoriaServiceImpl;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class CategoriasControler {
 
     @PostMapping("/categoria")
     public ResponseEntity<CategoriaResponseDTO> AñadirCategoria(@Validated @RequestBody CategoriaRegistroDTO dto) {
-        return ResponseEntity.ok(categoriaServiceimpl.crearCategoria(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaServiceimpl.crearCategoria(dto));
     }
 
     //

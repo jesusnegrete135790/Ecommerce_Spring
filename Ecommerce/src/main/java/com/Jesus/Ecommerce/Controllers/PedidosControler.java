@@ -4,6 +4,7 @@ import com.Jesus.Ecommerce.DTOs.Pedido.PedidoResponseDTO;
 import com.Jesus.Ecommerce.DTOs.Pedido.PedidoResponseSimpleDTO;
 import com.Jesus.Ecommerce.Servicios.Impl.PedidosServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,7 @@ public class PedidosControler {
 
     @PostMapping("/pedidos")
     public ResponseEntity<PedidoResponseDTO> AñadirPedido(@Validated @RequestBody Integer UsuarioId) {
-        return ResponseEntity.ok(pedidosServiceImpl.realizarPedido(UsuarioId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(pedidosServiceImpl.realizarPedido(UsuarioId));
     }
 
     //
