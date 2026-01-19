@@ -51,12 +51,15 @@ public class PedidosServiceImpl implements PedidosService {
     public PedidoResponseDTO realizarPedido(Integer idUsuario) {
 
         // 1. Buscar Usuario
+
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new UsuarioNoEncontradoExepcion("Usuario no encontrado"));
+        System.out.println("Paso 1");
 
         // 2. Buscar Carrito del Usuario
         Carrito carrito = carritoRepository.findByUsuarioId(idUsuario)
                 .orElseThrow(() -> new CarritoNoEncontrado("Carrito no encontrado para el usuario"));
+        System.out.println("Paso 2");
 
         // 3. Obtener Items del Carrito
         List<ItemsCarrito> itemsCarrito = itemsCarritoRepository.findByCarrito(carrito);
@@ -64,6 +67,7 @@ public class PedidosServiceImpl implements PedidosService {
         if (itemsCarrito.isEmpty()) {
             throw new CarritoVacioExeption("El carrito está vacío, no se puede realizar el pedido");
         }
+        System.out.println("Paso 3");
 
         // 4. Calcular el Total (Lógica de Negocio)
         // Asumiendo que ItemsCarrito tiene getPrecio() calculado (precio * cantidad) o lo calculas aquí
@@ -78,13 +82,13 @@ public class PedidosServiceImpl implements PedidosService {
         for (ItemsCarrito item:itemsCarrito){
             Producto producto = item.getProducto();
 
-            if (producto.getCantidadStock()>item.getCantidad()){
+            if (producto.getCantidadStock()<item.getCantidad()){
                 throw new StockMenorACero("Stock insuficiente para el producto: " + producto.getNombre());
             }
             producto.setCantidadStock(producto.getCantidadStock()-item.getCantidad());
             productoRepository.save(producto);
         }
-
+        System.out.println("Paso 4");
         // 5. Crear y Guardar el Pedido
         Pedidos pedido = new Pedidos();
         pedido.setUsuario(usuario);
@@ -97,16 +101,19 @@ public class PedidosServiceImpl implements PedidosService {
         Pedidos pedidoGuardado = pedidosRepository.save(pedido);
 
 
+        System.out.println("Paso 5");
 
         // 6. Convertir ItemsCarrito -> ItemsPedido y Guardar
         // Usamos el mapper corregido (abstract class) que te pasé antes
         List<ItemsPedido> itemsPedido = itemPedidosPersonalizada.toEntities(itemsCarrito, pedidoGuardado.getId());
         itemsPedidoRepository.saveAll(itemsPedido);
-
+        System.out.println("Paso 6");
         // 7. Vaciar el Carrito (¡Crucial!)
         itemsCarritoRepository.deleteByCarrito(carrito);
+        System.out.println("Paso 7");
         // 8. Retornar DTO
         return pedidoMapper.toDto(pedidoGuardado);
+
     }
 
     @Override

@@ -32,6 +32,11 @@ public class ItemCarritoControler {
         return ResponseEntity.ok(itemCarritoServiceImpl.getAllItemsProducto());
     }
 
+    @GetMapping("/itemcarrito/carrito/{id}")
+    public ResponseEntity<List<ItemCarritoResponseDTO>> obtenerItemsDeUnCarrito(@PathVariable Integer id){
+        return ResponseEntity.ok(itemCarritoServiceImpl.obtenerItemsPorCarrito(id));
+    }
+
     //
     // //
     // // //  metodos Post
@@ -40,7 +45,6 @@ public class ItemCarritoControler {
 
     @PostMapping("/itemcarrito")
     public ResponseEntity<ItemCarritoResponseDTO> AñadirItemCarrito(@Validated @RequestBody ItemCarritoRegistroDTO dto) {
-
         return ResponseEntity.status(HttpStatus.CREATED).body(itemCarritoServiceImpl.añadir(dto));
     }
 

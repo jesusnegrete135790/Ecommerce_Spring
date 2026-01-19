@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/pedidos")
+
 public class PedidosControler {
 
     @Autowired
@@ -44,8 +44,8 @@ public class PedidosControler {
     // //
     //
 
-    @PostMapping("/pedidos")
-    public ResponseEntity<PedidoResponseDTO> AñadirPedido(@Validated @RequestBody Integer UsuarioId) {
+    @PostMapping("/pedidos/{UsuarioId}")
+    public ResponseEntity<PedidoResponseDTO> AñadirPedido(@Validated @PathVariable Integer UsuarioId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(pedidosServiceImpl.realizarPedido(UsuarioId));
     }
 

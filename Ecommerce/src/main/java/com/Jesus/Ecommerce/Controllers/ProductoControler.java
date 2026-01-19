@@ -23,10 +23,15 @@ public class ProductoControler {
     @Autowired
     private ProductoServiceImpl productoServiceImpl;
 
+    @GetMapping("/producto/usuario/{id}")
+    public ResponseEntity<List<ProductoResponseDTO>> obtenerProductosPorUsuario(@PathVariable Integer id){
+
+        return ResponseEntity.ok(productoServiceImpl.obtenerProductosPorUsuario(id));
+    }
+
     // http://localhost:8080/producto
     @GetMapping("/producto")
     public ResponseEntity<List<ProductoResponseDTO>> obtener_productos() {
-
         return ResponseEntity.ok(productoServiceImpl.getAllProducts());
     }
 
@@ -51,30 +56,18 @@ public class ProductoControler {
         return ResponseEntity.ok(productoServiceImpl.ordenarDescripcion(descripcion));
     }
     // http://localhost:8080/producto/obtener/categoria/
-        @GetMapping("/producto/categoria/{categoria}")
+    @GetMapping("/producto/categoria/{categoria}")
     public ResponseEntity<List<ProductoResponseSimpleDTO>> obtener_productosLikeCategoria(@PathVariable int categoria) {
-
         return ResponseEntity.ok(productoServiceImpl.ordenarCategoria(categoria));
     }
 
 
-    //
-    // //
-    // // //  metodos Post
-    // //
-    //
 
     @PostMapping("/producto")
     public ResponseEntity<ProductoResponseDTO> Añadir_prodiucto(@Validated @RequestBody ProductoRegistroDTO dto) {
-
          return ResponseEntity.status(HttpStatus.CREATED).body(productoServiceImpl.crearProducto(dto));
     }
 
-    //
-    // //
-    // // //  metodos Put
-    // //
-    //
 
     @PutMapping("/producto/{id}")
     public ResponseEntity<ProductoResponseDTO> Modificar_producto(@Validated @PathVariable int id,@Validated  @RequestBody ProductoRegistroDTO dto) {

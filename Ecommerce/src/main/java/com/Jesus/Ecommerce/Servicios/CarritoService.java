@@ -1,9 +1,11 @@
 package com.Jesus.Ecommerce.Servicios;
 
+import com.Jesus.Ecommerce.DTOs.Carrito.CarritoResponseDTO;
+
 public interface CarritoService {
 
 
-
+    CarritoResponseDTO obtenerCarritoPorUsuario(Integer usuarioId);
 }
 
 /*

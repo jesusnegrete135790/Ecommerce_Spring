@@ -20,5 +20,6 @@ public interface ItemsCarritoService {
 
     ItemCarritoResponseDTO cambiarCantidad(Integer idCarrito, Integer idProducto, int nuevaCantidad);
 
+    List<ItemCarritoResponseDTO> obtenerItemsPorCarrito(Integer idCarrito);
 
 }

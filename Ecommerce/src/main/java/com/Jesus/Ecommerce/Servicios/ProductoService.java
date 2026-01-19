@@ -35,4 +35,6 @@ public interface ProductoService {
     List<ProductoResponseSimpleDTO> ordenarCategoria(Integer idCategoria);
     List<ProductoResponseSimpleDTO> ordenarNombre(String nombre);
     List<ProductoResponseSimpleDTO> ordenarDescripcion(String descripcion);
+
+    List<ProductoResponseDTO> obtenerProductosPorUsuario(Integer usuarioId);
 }

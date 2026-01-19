@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemCarritoServiceImpl implements ItemsCarritoService {
@@ -140,12 +141,19 @@ public class ItemCarritoServiceImpl implements ItemsCarritoService {
         return itemCarritoMapper.toListDto(items);
     }
 
-    // --- Método auxiliar para validar stock ---
     private void validarStock(Producto producto, int cantidadRequerida) {
-        if (cantidadRequerida < producto.getCantidadStock()) {
+        // CORRECCIÓN: Debe ser si cantidadRequerida es MAYOR (>) al stock
+        if (cantidadRequerida > producto.getCantidadStock()) {
             throw new StockMenorACero("La cantidad solicitada excede el stock disponible (" + producto.getCantidadStock() + ")");
         }
     }
 
+    public List<ItemCarritoResponseDTO> obtenerItemsPorCarrito(Integer idCarrito) {
+        List<ItemsCarrito> items = itemsCarritoRepository.findByCarritoId(idCarrito);
+        // Convertimos la lista de Entidades a DTOs usando el mapper
+        return items.stream()
+                .map(itemCarritoMapper::toDto)
+                .collect(Collectors.toList());
+    }
 
 }

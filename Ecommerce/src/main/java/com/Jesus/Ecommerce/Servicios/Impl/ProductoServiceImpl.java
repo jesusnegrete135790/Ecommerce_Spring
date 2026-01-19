@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductoServiceImpl implements ProductoService {
@@ -130,6 +131,13 @@ public class ProductoServiceImpl implements ProductoService {
         List<Producto> productos = productoRepository.findByDescripcionContaining(descripcion);
         return productoMapper.toSimpleDtoList(productos);
     }
+    @Override
+    public List<ProductoResponseDTO> obtenerProductosPorUsuario(Integer usuarioId) {
+        List<Producto> productos = productoRepository.findByUsuarioId(usuarioId);
+        return productos.stream()
 
+                .map(productoMapper::toDto)
+                .collect(Collectors.toList());
+    }
 
 }
