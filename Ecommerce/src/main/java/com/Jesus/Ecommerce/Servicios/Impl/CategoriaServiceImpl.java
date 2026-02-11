@@ -57,10 +57,11 @@ public class CategoriaServiceImpl implements CategoriaService {
     @Override
     public CategoriaResponseDTO modificarCategoria(Integer id,CategoriaRegistroDTO dto) {
 
+        // 1 Busca la categoria con el id del parametro
         Categoria categoriaExistente = categoriasRepository.findById(id)
                 .orElseThrow(() -> new CategoriaNoEncontradaExeption("Categoría no encontrada con id: " + id));
 
-
+        //2 transforma a entidad
         categoriaMapper.updateFromDto(dto, categoriaExistente);
 
         if (dto.categoriaPadreId() != null) {
@@ -68,7 +69,7 @@ public class CategoriaServiceImpl implements CategoriaService {
             if (dto.categoriaPadreId().equals(id)) {
                 throw new CategoriaPadreInvalida("Una categoría no puede ser su propio padre");
             }
-
+            // 3 busca el id de la categoria padre
             Categoria nuevoPadre = categoriasRepository.findById(dto.categoriaPadreId())
                     .orElseThrow(() -> new CategoriaNoEncontradaExeption("Categoría padre no encontrada"));
             categoriaExistente.setCategoria(nuevoPadre);
@@ -76,6 +77,7 @@ public class CategoriaServiceImpl implements CategoriaService {
             categoriaExistente.setCategoria(null);
         }
 
+        //4 guarda la entidad actualizada en la bd
         Categoria actualizada = categoriasRepository.save(categoriaExistente);
         return categoriaMapper.toDto(actualizada);
     }
