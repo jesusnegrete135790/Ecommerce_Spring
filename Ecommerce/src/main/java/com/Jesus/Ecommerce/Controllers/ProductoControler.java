@@ -25,7 +25,6 @@ public class ProductoControler {
 
     @GetMapping("/producto/usuario/{id}")
     public ResponseEntity<List<ProductoResponseDTO>> obtenerProductosPorUsuario(@PathVariable Integer id){
-
         return ResponseEntity.ok(productoServiceImpl.obtenerProductosPorUsuario(id));
     }
 
@@ -79,11 +78,6 @@ public class ProductoControler {
         return ResponseEntity.ok(productoServiceImpl.actualizarStock(id,stock));
     }
 
-    //
-    // //
-    // // //  metodos Delete
-    // //
-    //
 
     @DeleteMapping("/producto/{id}")
     public ResponseEntity<Void>borrarProducto(@PathVariable int id) {
@@ -92,138 +86,3 @@ public class ProductoControler {
         return ResponseEntity.noContent().build();
     }
 }
-
-    //
-    // //
-    // // //  metodos Get
-    // //
-    //
-     /*antes de DTOs
-    // http://localhost:8080/producto/obtener
-    @GetMapping("/obtener")
-    public HashMap<String, Object> obtener_productos(){
-        //obtener todas las carreras
-        List<Producto> productos = conector_productos.findAll();
-
-        HashMap<String,Object> respuesta= new HashMap<>();
-        respuesta.put("Status", 200);
-        respuesta.put("mensaje","Datos obtenidos exitosamente");
-        respuesta.put("productos",productos);
-        return respuesta;
-    }
-    // http://localhost:8080/producto/obtener/1
-    @GetMapping("/obtener/{id}")
-    public HashMap<String, Object> obtener_productos_Categoriaid(@PathVariable int id){
-
-        //obtener todas las carreras
-        List<Producto> productos = productoServiceImpl.ordenarCategoria(id);
-
-        HashMap<String,Object> respuesta= new HashMap<>();
-        respuesta.put("Status", 200);
-        respuesta.put("mensaje","Datos obtenidos exitosamente");
-        respuesta.put("productos",productos);
-        return respuesta;
-    }
-    // http://localhost:8080/producto/obtener/nombre/
-    @GetMapping("/obtener/nombre/{nombre}")
-    public HashMap<String, Object> obtener_productosLikeNombre(@PathVariable String nombre){
-
-        //obtener todas las carreras
-        List<Producto> productos = productoServiceImpl.ordenarNombre(nombre);
-
-        HashMap<String,Object> respuesta= new HashMap<>();
-        respuesta.put("Status", 200);
-        respuesta.put("mensaje","Datos obtenidos exitosamente");
-        respuesta.put("productos",productos);
-        return respuesta;
-    }
-
-    // http://localhost:8080/producto/obtener/descripcion/
-    @GetMapping("/obtener/descripcion/{descripcion}")
-    public HashMap<String, Object> obtener_productosLikeDescripcion(@PathVariable String descripcion){
-
-        //obtener todas las carreras
-        List<Producto> productos = productoServiceImpl.ordenarDescripcion(descripcion);
-
-        HashMap<String,Object> respuesta= new HashMap<>();
-        respuesta.put("Status", 200);
-        respuesta.put("mensaje","Datos obtenidos exitosamente");
-        respuesta.put("productos",productos);
-        return respuesta;
-    }
-
-
-    //
-    // //
-    // // //  metodos Post
-    // //
-    //
-
-    @PostMapping("/añadir")
-    public HashMap<String,Object> Añadir_prodiucto(@RequestBody Producto nuevosDatos){
-
-        conector_productos.save(nuevosDatos);
-
-        HashMap<String,Object> respuesta= new HashMap<>();
-        respuesta.put("Status", 201);
-        respuesta.put("mensaje","Datos Registrados exitosamente");
-        respuesta.put("productos",nuevosDatos);
-        return respuesta;
-
-    }
-
-    //
-    // //
-    // // //  metodos Put
-    // //
-    //
-
-    @PutMapping("/modificar/{id}")
-    public HashMap<String,Object>Modificar_producto(@RequestParam int id,@RequestBody Producto nuevosDatos){
-
-
-        Producto producto_existente = conector_productos.findById(id).orElseThrow();
-
-        producto_existente.setNombre(nuevosDatos.getNombre());
-        producto_existente.setDescripcion(nuevosDatos.getDescripcion());
-        producto_existente.setPrecio(nuevosDatos.getPrecio());
-        producto_existente.setCategoria(nuevosDatos.getCategoria());
-        producto_existente.setActualizado(nuevosDatos.getActualizado());
-        producto_existente.setCantidadStock(nuevosDatos.getCantidadStock());
-        producto_existente.setUsuario(nuevosDatos.getUsuario());
-
-
-        conector_productos.save(producto_existente);
-
-        HashMap<String,Object> respuesta= new HashMap<>();
-        respuesta.put("Status", 201);
-        respuesta.put("mensaje","producto modificados exitosamente");
-        respuesta.put("productos",producto_existente);
-        return respuesta;
-
-    }
-
-    //
-    // //
-    // // //  metodos Delete
-    // //
-    //
-
-    @DeleteMapping("/eliminar/{id}")
-    public HashMap<String,Object>borrarProducto(@RequestParam int id){
-
-        HashMap<String,Object> respuesta= new HashMap<>();
-
-        if (conector_productos.existsById(id)){
-            conector_productos.deleteById(id);
-            respuesta.put("Status", 200);
-            respuesta.put("Mensaje","producto eliminado exitosamente");
-        }else {
-            respuesta.put("Status", 404);
-            respuesta.put("mensaje","producto no encontrado");
-        }
-
-        return respuesta;
-    }
-
-}*/

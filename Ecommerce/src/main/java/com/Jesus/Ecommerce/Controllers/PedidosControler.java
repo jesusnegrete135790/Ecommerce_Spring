@@ -19,11 +19,6 @@ public class PedidosControler {
     @Autowired
     private PedidosServiceImpl pedidosServiceImpl;
 
-    //
-    // //
-    // // //  metodos Get
-    // //
-    //
 
     @GetMapping("/pedidos")
     public ResponseEntity<List<PedidoResponseSimpleDTO>> obtenerPedidos(){
@@ -36,35 +31,16 @@ public class PedidosControler {
     }
 
 
-
-
-    //
-    // //
-    // // //  metodos Post
-    // //
-    //
-
     @PostMapping("/pedidos/{UsuarioId}")
     public ResponseEntity<PedidoResponseDTO> AñadirPedido(@Validated @PathVariable Integer UsuarioId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(pedidosServiceImpl.realizarPedido(UsuarioId));
     }
 
-    //
-    // //
-    // // //  metodos Put
-    // //
-    //
 
     @PutMapping("/pedidos/{id}/{estado}")
     public ResponseEntity<PedidoResponseDTO>ModificarPedidos(@Validated @PathVariable int id,@Validated @PathVariable String estado){
         return ResponseEntity.ok(pedidosServiceImpl.actualizarEstado(id,estado));
     }
-
-    //
-    // //
-    // // //  metodos Delete
-    // //
-    //
 
     @DeleteMapping("/pedidos/{id}")
     public ResponseEntity<Void>borrarPedido(@RequestParam int id){

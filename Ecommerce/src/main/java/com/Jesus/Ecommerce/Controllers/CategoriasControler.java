@@ -24,48 +24,29 @@ public class CategoriasControler {
     @Autowired
     private CategoriaServiceImpl categoriaServiceimpl;
 
-    //
-    // //
-    // // //  metodos Get
-    // //
-    //
-
     @GetMapping("/categoria")
     public ResponseEntity<List<CategoriaResponseSimpleDTO>> obtenerCategorias(){
         return ResponseEntity.ok(categoriaServiceimpl.obtenerCategorias()) ;
     }
 
-
-
-    //
-    // //
-    // // //  metodos Post
-    // //
-    //
+    @GetMapping("/categoria/{id}")
+    public ResponseEntity<CategoriaResponseDTO> obtenerCategorias(@PathVariable Integer id){
+        return ResponseEntity.ok(categoriaServiceimpl.obtenerCategoriasId(id)) ;
+    }
 
     @PostMapping("/categoria")
     public ResponseEntity<CategoriaResponseDTO> AñadirCategoria(@Validated @RequestBody CategoriaRegistroDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoriaServiceimpl.crearCategoria(dto));
     }
 
-    //
-    // //
-    // // //  metodos Put
-    // //
-    //
-
     @PutMapping("/categoria/{id}")
-    public ResponseEntity<CategoriaResponseDTO>ModificarCategoria(@Validated @RequestParam int id,@Validated @RequestBody CategoriaRegistroDTO dto){
+    public ResponseEntity<CategoriaResponseDTO>ModificarCategoria(@Validated @PathVariable int id,@Validated @RequestBody CategoriaRegistroDTO dto){
         return ResponseEntity.ok(categoriaServiceimpl.modificarCategoria(id,dto));
     }
 
-    //
-    // //
-    // // //  metodos Delete
-    // //
-    //
+
     @DeleteMapping("/categoria/{id}")
-    public ResponseEntity<Void> borrarCategoria(@RequestParam int id){
+    public ResponseEntity<Void> borrarCategoria(@PathVariable int id){
         categoriaServiceimpl.eliminarCategoria(id);
         return ResponseEntity.noContent().build();
     }

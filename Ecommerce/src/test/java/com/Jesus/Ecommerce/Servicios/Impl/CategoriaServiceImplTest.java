@@ -122,7 +122,7 @@ class CategoriaServiceImplTest {
         @Test
         @DisplayName("Exito Crear categoria")
         void crearCategoria() {
-            // Arrange
+
             Integer idCategoriaPadre = 1;
 
             Categoria padre = new Categoria(idCategoriaPadre, "Categoria Padre", "descripcion categoria padre", null);
@@ -140,6 +140,48 @@ class CategoriaServiceImplTest {
             assertNotNull(resultado);
             assertEquals("Categoria Nueva", resultado.nombre());
 
+        }
+
+        @Test
+        @DisplayName("Éxito: Crear categoría raíz (sin padre)")
+        void crearCategoria_SinPadre() {
+            // Arrange
+            CategoriaRegistroDTO dto = new CategoriaRegistroDTO("Raíz", "Sin padre", null); // ID padre null
+            Categoria entidad = new Categoria(1, "Raíz", "Sin padre", null);
+            CategoriaResponseDTO response = new CategoriaResponseDTO(1, "Raíz", "Sin padre", null);
+
+            when(categoriaMapper.toEntity(dto)).thenReturn(entidad);
+            when(categoriasRepository.save(entidad)).thenReturn(entidad);
+            when(categoriaMapper.toDto(entidad)).thenReturn(response);
+
+            // Act
+            CategoriaResponseDTO resultado = categoriaService.crearCategoria(dto);
+
+            // Assert
+            assertNotNull(resultado);
+            assertNull(resultado.categoriaPadre());
+
+            // Verificamos que NUNCA buscó un padre porque el ID era null
+            verify(categoriasRepository, never()).findById(any());
+        }
+
+        @Test
+        @DisplayName("Fallo: Lanza excepción si el ID del padre indicado no existe")
+        void crearCategoria_PadreNoExiste() {
+            // Arrange
+            Integer idPadreFantasma = 999;
+            CategoriaRegistroDTO dto = new CategoriaRegistroDTO("Hijo", "Desc", idPadreFantasma);
+            Categoria entidad = new Categoria(null, "Hijo", "Desc", null); // Entidad temporal
+
+            when(categoriaMapper.toEntity(dto)).thenReturn(entidad);
+
+            when(categoriasRepository.findById(idPadreFantasma)).thenReturn(Optional.empty());
+
+            assertThrows(CategoriaNoEncontradaExeption.class, () -> {
+                categoriaService.crearCategoria(dto);
+            });
+
+            verify(categoriasRepository, never()).save(any());
         }
 
     }

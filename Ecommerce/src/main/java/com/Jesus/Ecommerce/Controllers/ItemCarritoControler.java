@@ -21,12 +21,6 @@ public class ItemCarritoControler {
     private ItemCarritoServiceImpl itemCarritoServiceImpl;
 
 
-    //
-    // //
-    // // //  metodos Get
-    // //
-    //
-
     @GetMapping("/itemcarrito")
     public ResponseEntity<List<ItemCarritoResponseDTO>> obtenerItemCarrito(){
         return ResponseEntity.ok(itemCarritoServiceImpl.getAllItemsProducto());
@@ -37,34 +31,17 @@ public class ItemCarritoControler {
         return ResponseEntity.ok(itemCarritoServiceImpl.obtenerItemsPorCarrito(id));
     }
 
-    //
-    // //
-    // // //  metodos Post
-    // //
-    //
-
     @PostMapping("/itemcarrito")
     public ResponseEntity<ItemCarritoResponseDTO> AñadirItemCarrito(@Validated @RequestBody ItemCarritoRegistroDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(itemCarritoServiceImpl.añadir(dto));
     }
 
-    //
-    // //
-    // // //  metodos Put
-    // //
-    //
 
     @PutMapping("/itemcarrito/{id}")
     public ResponseEntity<ItemCarritoResponseDTO> ModificarItemCarrito(@Validated @PathVariable Integer id,@Validated @RequestBody ItemCarritoRegistroDTO dto) {
 
         return ResponseEntity.ok(itemCarritoServiceImpl.modificar(id,dto));
     }
-
-    //
-    // //
-    // // //  metodos Delete
-    // //
-    //
 
     @DeleteMapping("/itemcarrito/{id}")
     public ResponseEntity<Void>borrarItemCarrito(@PathVariable int id){

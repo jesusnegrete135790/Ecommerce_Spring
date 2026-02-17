@@ -30,12 +30,6 @@ public class UsuarioControler {
         return ResponseEntity.ok(usuarioService.obtenerUsuarioPorId(id));
     }
 
-    //
-    // //
-    // // //  metodos Post
-    // //
-    //
-
 
     @PostMapping("/usuario")
     public ResponseEntity<UsuarioResponseDTO> AñadirUsuario(@Validated @RequestBody UsuarioRegistroDTO dto) {
