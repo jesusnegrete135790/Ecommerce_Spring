@@ -43,7 +43,7 @@ public class PedidosControler {
     }
 
     @DeleteMapping("/pedidos/{id}")
-    public ResponseEntity<Void>borrarPedido(@RequestParam int id){
+    public ResponseEntity<Void>borrarPedido(@PathVariable int id){
         pedidosServiceImpl.cancelarPedido(id);
         return ResponseEntity.noContent().build();
     }

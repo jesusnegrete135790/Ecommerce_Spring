@@ -15,19 +15,6 @@ El proyecto utiliza un stack tecnológico moderno y estándar en la industria:
 * **Validación:** Jakarta Bean Validation (Hibernate Validator)
 * **Herramientas:** Lombok, Maven
 
-## 🧪 Estrategia de Testing (QA)
-
-Actualmente, el proyecto se encuentra en una fase intensiva de implementación de pruebas unitarias para garantizar la robustez del código.
-
-* **Tecnologías:** JUnit 5 y Mockito.
-* **Enfoque:**
-    * Pruebas aisladas de Servicios usando `Mocks`.
-    * Cobertura de "Happy Paths" (casos de éxito) y "Edge Cases" (errores y excepciones).
-    * Validación estricta de lógica de negocio usando `assertThrows` para excepciones personalizadas.
-    * Organización limpia de tests mediante `@Nested` para mejorar la legibilidad.
-
-> 🚧 **Estado de los Tests:** Implementando cobertura para Servicios (Categorías, Usuarios). Próximamente: Tests de Integración para Controladores (`MockMvc`).
-
 ## 📋 Características Principales
 
 La API está dividida en varios módulos funcionales:
