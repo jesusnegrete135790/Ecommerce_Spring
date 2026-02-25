@@ -1,0 +1,32 @@
+version: '3.8' # La versión del formato de Compose
+
+services:
+  # 1. EL SERVICIO DE LA BASE DE DATOS
+  db-ecommerce:
+    image: postgres:15-alpine # Descarga una imagen ligera de Postgres
+    container_name: postgres-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=135790 # ¡Cámbiala por la tuya!
+      - POSTGRES_DB=ecomerceb
+    ports:
+      - "5432:5432" # Expone el puerto por si quieres ver la BD desde DBeaver/PgAdmin
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # ¡Súper importante! Guarda los datos para que no se borren al apagar el contenedor
+
+  # 2. EL SERVICIO DE TU BACKEND (SPRING BOOT)
+  api-ecommerce:
+    build: . # Le dice a Compose: "Busca el Dockerfile en esta carpeta y constrúyelo"
+    container_name: spring-api
+    ports:
+      - "8080:8080" # Expone el puerto 8080
+    environment:
+      - DB_PASSWORD=135790 # Debe coincidir con la de arriba
+      # ¡OJO AQUÍ! En lugar de "localhost", usamos "db-ecommerce" (el nombre del servicio de arriba)
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-ecommerce:5432/ecomerceb
+    depends_on:
+      - db-ecommerce # Le dice a Spring: "Espera a que la BD esté encendida antes de arrancar"
+
+# Declaramos el volumen que usamos arriba
+volumes:
+  postgres_data:
