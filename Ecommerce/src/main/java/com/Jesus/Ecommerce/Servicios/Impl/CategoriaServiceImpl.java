@@ -11,6 +11,8 @@ import com.Jesus.Ecommerce.Repositorios.CategoriasRepository;
 import com.Jesus.Ecommerce.Servicios.CategoriaService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +28,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 
 
     @Override
+    @Cacheable(value = "categorias_lista")
     public List<CategoriaResponseSimpleDTO> obtenerCategorias() {
         return categoriaMapper.toSimpleDtoList(categoriasRepository.findAll());
     }
@@ -39,11 +42,12 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "categorias_lista", allEntries = true)
     public CategoriaResponseDTO crearCategoria(CategoriaRegistroDTO dto) {
 
         Categoria nuevaCategoria = categoriaMapper.toEntity(dto);
 
-        // 2. Asignar Categoría Padre si existe el ID
+
         if (dto.categoriaPadreId() != null) {
             Categoria padre = categoriasRepository.findById(dto.categoriaPadreId())
                     .orElseThrow(() -> new CategoriaNoEncontradaExeption("Categoría padre no encontrada con id: " + dto.categoriaPadreId()));
@@ -55,6 +59,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
+    @CacheEvict(value = "categorias_lista", allEntries = true)
     public CategoriaResponseDTO modificarCategoria(Integer id,CategoriaRegistroDTO dto) {
 
         // 1 Busca la categoria con el id del parametro
@@ -83,6 +88,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
+    @CacheEvict(value = "categorias_lista", allEntries = true)
     public void eliminarCategoria(Integer id) {
         if (!categoriasRepository.existsById(id)) {
             throw new CategoriaNoEncontradaExeption("Categoría no encontrada con id: " + id);

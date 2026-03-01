@@ -15,6 +15,12 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
 
+  redis-cache:
+    image: redis:alpine
+    container_name: redis-db
+    ports:
+      - "6379:6379"
+
   api-ecommerce:
     build: .
     container_name: spring-api

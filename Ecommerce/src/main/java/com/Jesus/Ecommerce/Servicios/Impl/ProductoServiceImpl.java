@@ -13,6 +13,8 @@ import com.Jesus.Ecommerce.Repositorios.CategoriasRepository;
 import com.Jesus.Ecommerce.Repositorios.ProductoRepository;
 import com.Jesus.Ecommerce.Servicios.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,6 +34,7 @@ public class ProductoServiceImpl implements ProductoService {
     private ProductoMapper productoMapper;
 
     @Override
+    @CacheEvict(value = "productos_lista", allEntries = true)
     public ProductoResponseDTO crearProducto(ProductoRegistroDTO dto) {
 
 
@@ -54,6 +57,7 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    @CacheEvict(value = "productos_lista", allEntries = true)
     public ProductoResponseDTO actualizarProducto(Integer idProducto, ProductoRegistroDTO dto) {
 
         // 1. Buscar producto existente
@@ -87,11 +91,13 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    @Cacheable(value = "productos_lista")
     public List<ProductoResponseDTO> getAllProducts() {
         return productoMapper.toDtoList(productoRepository.findAll());
     }
 
     @Override
+    @CacheEvict(value = "productos_lista", allEntries = true)
     public void eliminarProducto(Integer idProducto) {
         if (!productoRepository.existsById(idProducto)) {
             throw new ProductoNoEncontradoExeption("Producto no encontrado con id: " + idProducto);
@@ -101,6 +107,7 @@ public class ProductoServiceImpl implements ProductoService {
 
 
     @Override
+    @CacheEvict(value = "productos_lista", allEntries = true)
     public ProductoResponseDTO actualizarStock(Integer idProducto, int stock) {
         if (stock < 0) {
             throw new StockMenorACero("La cantidad debe ser mayor o igual a 0");

@@ -2,6 +2,7 @@ package com.Jesus.Ecommerce.DTOs.Categoria;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.io.Serializable;
 
 public record CategoriaRegistroDTO(
         @NotBlank(message = "El nombre es obligatorio")
@@ -11,6 +12,4 @@ public record CategoriaRegistroDTO(
 
 
         Integer categoriaPadreId
-) {
-
-}
+) implements Serializable { }

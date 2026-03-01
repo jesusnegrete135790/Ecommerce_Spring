@@ -3,6 +3,7 @@ package com.Jesus.Ecommerce.DTOs.Producto;
 import com.Jesus.Ecommerce.DTOs.Categoria.CategoriaResponseDTO;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.constraints.*;
+import java.io.Serializable;
 
 import java.math.BigDecimal;
 
@@ -23,5 +24,4 @@ public record ProductoRegistroDTO(
 
          @NotNull(message = "La categoria es obligatorio")
          Integer categoriaID
-) {
-}
+) implements Serializable { }

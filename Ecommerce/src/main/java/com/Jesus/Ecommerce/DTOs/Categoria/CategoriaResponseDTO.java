@@ -1,8 +1,10 @@
 package com.Jesus.Ecommerce.DTOs.Categoria;
 
+
+import java.io.Serializable;
+
 public record CategoriaResponseDTO(
         Integer id,
         String nombre,
         String descripcion,
-        CategoriaResponseSimpleDTO categoriaPadre) {
-}
+        CategoriaResponseSimpleDTO categoriaPadre)implements Serializable { }
