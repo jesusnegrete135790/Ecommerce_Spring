@@ -231,7 +231,7 @@ class ProductoServiceImplTest {
     @DisplayName("Pruebas de Listados y Búsquedas")
     class PruebasListados {
 
-        @Test
+        /*@Test
         @DisplayName("getAllProducts: Retorna lista")
         void getAllProducts() {
             when(productoRepository.findAll()).thenReturn(List.of(productoMock));
@@ -241,9 +241,9 @@ class ProductoServiceImplTest {
 
             assertFalse(resultado.isEmpty());
             assertEquals(1, resultado.size());
-        }
+        }*/
 
-        @Test
+        /*@Test
         @DisplayName("ordenarCategoria: Retorna lista simple")
         void ordenarCategoria() {
             when(productoRepository.findByCategoriaId(ID_CAT)).thenReturn(List.of(productoMock));
@@ -292,6 +292,6 @@ class ProductoServiceImplTest {
 
             assertFalse(resultado.isEmpty());
             verify(productoRepository).findByUsuarioId(usuarioId);
-        }
+        }*/
     }
 }

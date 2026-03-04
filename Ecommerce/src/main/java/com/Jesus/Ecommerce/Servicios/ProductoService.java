@@ -7,6 +7,8 @@ import com.Jesus.Ecommerce.DTOs.Producto.ProductoResponseSimpleDTO;
 import com.Jesus.Ecommerce.Modelos.Categoria;
 import com.Jesus.Ecommerce.Modelos.Producto;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,15 +28,15 @@ public interface ProductoService {
     ProductoResponseDTO obtenerProductoPorId(Integer idProducto);
 
     // Listar todos los productos
-    List<ProductoResponseDTO> getAllProducts();
+    Page<ProductoResponseDTO> getAllProducts(Pageable pageable);
 
     // Actualizar stock
     ProductoResponseDTO actualizarStock(Integer idProducto, int stock);
 
     // Métodos de filtrado (ahora devuelven DTOs)
-    List<ProductoResponseSimpleDTO> ordenarCategoria(Integer idCategoria);
-    List<ProductoResponseSimpleDTO> ordenarNombre(String nombre);
-    List<ProductoResponseSimpleDTO> ordenarDescripcion(String descripcion);
+    Page<ProductoResponseSimpleDTO> ordenarCategoria(Integer idCategoria,Pageable pageable);
+    Page<ProductoResponseSimpleDTO> ordenarNombre(String nombre,Pageable pageable);
+    Page<ProductoResponseSimpleDTO> ordenarDescripcion(String descripcion,Pageable pageable);
 
-    List<ProductoResponseDTO> obtenerProductosPorUsuario(Integer usuarioId);
+    Page<ProductoResponseDTO> obtenerProductosPorUsuario(Integer usuarioId,Pageable pageable);
 }

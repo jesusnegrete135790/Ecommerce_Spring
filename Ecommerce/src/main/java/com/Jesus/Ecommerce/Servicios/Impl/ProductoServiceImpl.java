@@ -13,13 +13,11 @@ import com.Jesus.Ecommerce.Repositorios.CategoriasRepository;
 import com.Jesus.Ecommerce.Repositorios.ProductoRepository;
 import com.Jesus.Ecommerce.Servicios.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductoServiceImpl implements ProductoService {
@@ -34,7 +32,6 @@ public class ProductoServiceImpl implements ProductoService {
     private ProductoMapper productoMapper;
 
     @Override
-    @CacheEvict(value = "productos_lista", allEntries = true)
     public ProductoResponseDTO crearProducto(ProductoRegistroDTO dto) {
 
 
@@ -57,7 +54,7 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    @CacheEvict(value = "productos_lista", allEntries = true)
+
     public ProductoResponseDTO actualizarProducto(Integer idProducto, ProductoRegistroDTO dto) {
 
         // 1. Buscar producto existente
@@ -85,19 +82,18 @@ public class ProductoServiceImpl implements ProductoService {
     public ProductoResponseDTO obtenerProductoPorId(Integer idProducto) {
         Producto producto = productoRepository.findById(idProducto)
                 .orElseThrow(() -> new ProductoNoEncontradoExeption("Producto no encontrado"));
-
-        // Cambio clave: Usar el mapper en lugar del método manual
         return productoMapper.toDto(producto);
     }
 
     @Override
-    @Cacheable(value = "productos_lista")
-    public List<ProductoResponseDTO> getAllProducts() {
-        return productoMapper.toDtoList(productoRepository.findAll());
+    public Page<ProductoResponseDTO> getAllProducts(Pageable pageable) {
+
+        Page<Producto> productosPage = productoRepository.findAll(pageable);
+
+        return productosPage.map(producto -> productoMapper.toDto(producto));
     }
 
     @Override
-    @CacheEvict(value = "productos_lista", allEntries = true)
     public void eliminarProducto(Integer idProducto) {
         if (!productoRepository.existsById(idProducto)) {
             throw new ProductoNoEncontradoExeption("Producto no encontrado con id: " + idProducto);
@@ -107,7 +103,6 @@ public class ProductoServiceImpl implements ProductoService {
 
 
     @Override
-    @CacheEvict(value = "productos_lista", allEntries = true)
     public ProductoResponseDTO actualizarStock(Integer idProducto, int stock) {
         if (stock < 0) {
             throw new StockMenorACero("La cantidad debe ser mayor o igual a 0");
@@ -120,30 +115,28 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public List<ProductoResponseSimpleDTO> ordenarCategoria(Integer idCategoria){
-        List<Producto> productos = productoRepository.findByCategoriaId(idCategoria);
-        return productoMapper.toSimpleDtoList(productos);
+    public Page<ProductoResponseSimpleDTO> ordenarCategoria(Integer idCategoria,Pageable pageable){
+        Page<Producto> productos = productoRepository.findByCategoriaId(idCategoria,pageable);
+        return productos.map(producto -> productoMapper.toSimpleDto(producto));
 
     }
 
     @Override
-    public List<ProductoResponseSimpleDTO> ordenarNombre(String nombre){
-        List<Producto> productos = productoRepository.findByNombreContaining(nombre);
-        return productoMapper.toSimpleDtoList(productos);
+    public Page<ProductoResponseSimpleDTO> ordenarNombre(String nombre,Pageable pageable){
+        Page<Producto> productos = productoRepository.findByNombreContaining(nombre,pageable);
+        return productos.map(producto -> productoMapper.toSimpleDto(producto));
     }
 
     @Override
-    public List<ProductoResponseSimpleDTO> ordenarDescripcion(String descripcion){
-        List<Producto> productos = productoRepository.findByDescripcionContaining(descripcion);
-        return productoMapper.toSimpleDtoList(productos);
+    public Page<ProductoResponseSimpleDTO> ordenarDescripcion(String descripcion,Pageable pageable){
+        Page<Producto> productos = productoRepository.findByDescripcionContaining(descripcion,pageable);
+        return productos.map(producto -> productoMapper.toSimpleDto(producto));
     }
     @Override
-    public List<ProductoResponseDTO> obtenerProductosPorUsuario(Integer usuarioId) {
-        List<Producto> productos = productoRepository.findByUsuarioId(usuarioId);
-        return productos.stream()
+    public Page<ProductoResponseDTO> obtenerProductosPorUsuario(Integer usuarioId,Pageable pageable) {
+        Page<Producto> productos = productoRepository.findByUsuarioId(usuarioId,pageable);
 
-                .map(productoMapper::toDto)
-                .collect(Collectors.toList());
+        return productos.map(productoMapper::toDto);
     }
 
 }

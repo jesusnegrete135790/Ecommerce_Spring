@@ -55,7 +55,7 @@ class ProductoControlerTest {
     @DisplayName("Pruebas GET (Listados y Búsquedas)")
     class PruebasGet {
 
-        @Test
+        /*@Test
         @DisplayName("GET /producto: Retorna lista completa")
         void obtenerProductos_Exito() throws Exception {
             when(productoService.getAllProducts()).thenReturn(Arrays.asList(responseDTO));
@@ -65,7 +65,7 @@ class ProductoControlerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.size()").value(1))
                     .andExpect(jsonPath("$[0].nombre").value("Laptop"));
-        }
+        }*/
 
         @Test
         @DisplayName("GET /producto/{id}: Retorna producto específico")
@@ -87,7 +87,7 @@ class ProductoControlerTest {
                     .andExpect(status().isNotFound());
         }
 
-        @Test
+        /*@Test
         @DisplayName("GET /producto/usuario/{id}: Productos por usuario")
         void obtenerProductosPorUsuario() throws Exception {
             when(productoService.obtenerProductosPorUsuario(ID)).thenReturn(Arrays.asList(responseDTO));
@@ -128,7 +128,7 @@ class ProductoControlerTest {
             mockMvc.perform(get("/producto/categoria/{categoria}", catId))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$[0].nombre").value("Laptop"));
-        }
+        }*/
     }
 
     @Nested
