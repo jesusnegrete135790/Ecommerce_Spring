@@ -27,6 +27,9 @@ public class UsuarioServiceImpl implements UsuarioService {
         @Autowired
         private UsuarioMapper usuarioMapper;
 
+        @Autowired
+        private NotificacionProducerServiceImpl notificacionProducer;
+
         @Override
         public UsuarioResponseDTO registrarUsuario(UsuarioRegistroDTO dto) {
 
@@ -36,7 +39,12 @@ public class UsuarioServiceImpl implements UsuarioService {
             usuario.setCreado(LocalDateTime.now());
             usuario.setActualizado(LocalDateTime.now());
 
+
+
             Usuario usuarioGuardado = usuarioRepository.save(usuario);
+
+            notificacionProducer.enviarCorreoBienvenida(usuarioGuardado.getCorreoElectronico());
+
             return usuarioMapper.toDto(usuarioGuardado);
         }
 

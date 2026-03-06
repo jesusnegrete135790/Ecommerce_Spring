@@ -29,14 +29,14 @@ public class ProductoControler {
     @GetMapping("/producto/usuario/{id}")
     public ResponseEntity<Page<ProductoResponseDTO>> obtenerProductosPorUsuario(
             @PathVariable Integer id,
-            @PageableDefault(page = 0, size = 20) Pageable pageable){
+            @PageableDefault(page = 0, size = 5) Pageable pageable){
         return ResponseEntity.ok(productoServiceImpl.obtenerProductosPorUsuario(id,pageable));
     }
 
     // http://localhost:8080/producto
     @GetMapping("/producto")
     public ResponseEntity<Page<ProductoResponseDTO>> getAllProducts(
-            @PageableDefault(page = 0, size = 20) Pageable pageable
+            @PageableDefault(page = 0, size = 5) Pageable pageable
     ) {
         Page<ProductoResponseDTO> productos = productoServiceImpl.getAllProducts(pageable);
         return ResponseEntity.ok(productos);
@@ -54,7 +54,7 @@ public class ProductoControler {
     @GetMapping("/producto/nombre/{nombre}")
     public ResponseEntity<Page<ProductoResponseSimpleDTO>> obtener_productosLikeNombre(
             @PathVariable String nombre,
-            @PageableDefault(page = 0, size = 20) Pageable pageable) {
+            @PageableDefault(page = 0, size = 5) Pageable pageable) {
 
         return ResponseEntity.ok(productoServiceImpl.ordenarNombre(nombre,pageable));
     }
@@ -63,7 +63,7 @@ public class ProductoControler {
     @GetMapping("/producto/descripcion/{descripcion}")
     public ResponseEntity<Page<ProductoResponseSimpleDTO>> obtener_productosLikeDescripcion(
             @PathVariable String descripcion,
-            @PageableDefault(page = 0, size = 20) Pageable pageable) {
+            @PageableDefault(page = 0, size = 5) Pageable pageable) {
 
         return ResponseEntity.ok(productoServiceImpl.ordenarDescripcion(descripcion,pageable));
     }
@@ -71,7 +71,7 @@ public class ProductoControler {
     @GetMapping("/producto/categoria/{categoria}")
     public ResponseEntity<Page<ProductoResponseSimpleDTO>> obtener_productosLikeCategoria(
             @PathVariable int categoria,
-            @PageableDefault(page = 0, size = 20) Pageable pageable) {
+            @PageableDefault(page = 0, size = 5 ) Pageable pageable) {
         return ResponseEntity.ok(productoServiceImpl.ordenarCategoria(categoria,pageable));
     }
 
