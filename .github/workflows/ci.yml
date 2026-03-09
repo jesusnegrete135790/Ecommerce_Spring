@@ -22,4 +22,5 @@ jobs:
           cache: maven
 
       - name: 3. Ejecutar Pruebas Unitarias
+        working-directory: ./Ecommerce
         run: mvn clean test
