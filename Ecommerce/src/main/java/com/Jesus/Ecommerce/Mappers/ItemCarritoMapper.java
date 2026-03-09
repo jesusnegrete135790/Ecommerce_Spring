@@ -1,6 +1,6 @@
 package com.Jesus.Ecommerce.Mappers;
 
-import com.Jesus.Ecommerce.DTOs.Carrito.CarritoResponseDTO;
+
 import com.Jesus.Ecommerce.DTOs.ItemCarrito.ItemCarritoRegistroDTO;
 import com.Jesus.Ecommerce.DTOs.ItemCarrito.ItemCarritoResponseDTO;
 import com.Jesus.Ecommerce.Modelos.ItemsCarrito;
@@ -13,8 +13,6 @@ import java.util.List;
 // "uses" permite reciclar la lógica de los otros mappers para los objetos anidados
 @Mapper(componentModel = "spring", uses = {CarritoMapper.class, ProductoMapper.class})
 public interface ItemCarritoMapper {
-
-
 
 
     @Mapping(source = "carrito", target = "carritoResponseDTO")

@@ -18,8 +18,6 @@ public interface CategoriaMapper {
 
     List<CategoriaResponseDTO> toDtoList(List<Categoria> entities);
 
-    // DTO -> Entidad (Crear)
-    // Ignoramos 'categoria' (padre) porque lo buscaremos por ID en el servicio
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "categoria", ignore = true)
     Categoria toEntity(CategoriaRegistroDTO dto);

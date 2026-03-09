@@ -34,6 +34,8 @@ class UsuarioServiceImplTest {
     private PasswordEncoder passwordEncoder;
     @Mock
     private UsuarioMapper usuarioMapper;
+    @Mock
+    private NotificacionProducerServiceImpl notificacionProducer;
 
     @InjectMocks
 
