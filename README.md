@@ -1,138 +1,91 @@
-# 🛒 Ecommerce Backend API
+# 🛒 E-Commerce API RESTful | Advanced Backend Architecture
 
-Bienvenido al backend del proyecto **Ecommerce**. Esta es una API RESTful robusta construida con **Java** y **Spring Boot**, diseñada para gestionar las operaciones de una plataforma de comercio electrónico, incluyendo usuarios, productos, carritos de compra, pedidos y pagos.
+![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=java)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5-6DB33F?style=for-the-badge&logo=spring-boot)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis)
+![RabbitMQ](https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker)
+![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions)
 
-## 🚀 Tecnologías Utilizadas
+Una API RESTful robusta y escalable para la gestión completa de un sistema de comercio electrónico. Construida bajo los principios de **Clean Architecture**, este proyecto demuestra la implementación de patrones de diseño empresariales, procesamiento asíncrono y optimización de rendimiento.
 
-El proyecto utiliza un stack tecnológico moderno y estándar en la industria:
+## 🚀 Arquitectura y Decisiones Técnicas
 
-* **Lenguaje:** Java 25
-* **Framework Principal:** Spring Boot 3.5.6
-* **Base de Datos:** PostgreSQL
-* **Persistencia:** Spring Data JPA (Hibernate)
-* **Seguridad:** Spring Security (Configurado para APIs REST)
-* **Mapeo de Objetos:** MapStruct 1.6.3
-* **Validación:** Jakarta Bean Validation (Hibernate Validator)
-* **Herramientas:** Lombok, Maven
+* **Seguridad (Autenticación y Autorización):** Implementación de **Spring Security con Tokens JWT** sin estado. Rutas protegidas por roles y filtros de validación por cada petición al API Gateway interno.
+* **Optimización de Lectura (Caché):** Integración de **Redis** para almacenar en memoria caché datos de alto tráfico (como el catálogo de categorías y productos), reduciendo los tiempos de respuesta y liberando carga de la base de datos principal.
+* **Procesamiento Asíncrono:** Uso de **RabbitMQ** como Message Broker. Procesos pesados (como el envío de correos electrónicos de bienvenida o confirmación de pedidos) se delegan a colas de mensajería para no bloquear el hilo de respuesta del usuario.
+* **Mapeo de Datos:** Aislamiento estricto de la capa de persistencia utilizando **MapStruct** para la conversión eficiente entre Entidades y DTOs, evitando fugas de información sensible.
+* **Manejo de Excepciones:** Uso de un `@ControllerAdvice` global para capturar errores de negocio (ej. `StockMenorACero`, `PagoRechazadoException`) y estandarizar las respuestas JSON de error.
 
-## 📋 Características Principales
+## ⚙️ Stack Tecnológico
 
-La API está dividida en varios módulos funcionales:
+* **Core:** Java 21, Spring Boot 3.5.x
+* **Base de Datos Relacional:** PostgreSQL
+* **Caché en Memoria:** Redis
+* **Mensajería / Broker:** RabbitMQ
+* **Mapeo de Objetos:** MapStruct
+* **Testing:** JUnit 5, Mockito (100% aislamientos en capa de servicios)
+* **Documentación:** Swagger / OpenAPI 3
+* **Infraestructura:** Docker & Docker Compose
+* **DevOps:** GitHub Actions (Integración Continua automatizada)
 
-### 👤 Usuarios (`/usuario`)
-* Registro y autenticación de usuarios.
-* Gestión de perfiles (ver, editar, eliminar).
-* Hashing de contraseñas con `BCrypt`.
+## 📦 Características Principales (Endpoints)
 
-### 📦 Productos y Categorías (`/producto`, `/categoria`)
-* **Catálogo:** Listar productos, buscar por nombre o descripción.
-* **Filtrado:** Ordenar productos por categoría.
-* **Inventario:** Gestión de stock en tiempo real (validación de stock negativo).
-* **Categorías:** Estructura jerárquica (categorías padre/hija).
+El sistema cuenta con controladores dedicados para gestionar todo el ciclo de vida del E-commerce:
 
-### 🛒 Carrito de Compras (`/itemcarrito`)
-* Agregar productos al carrito.
-* Modificar cantidades (con validación de stock disponible).
-* Vaciar carrito o eliminar ítems específicos.
+1. **Auth (`/auth`):** Registro de usuarios y generación de JWT (Login).
+2. **Catálogo (`/productos`, `/categorias`):** Gestión de inventario con validación de stock en tiempo real.
+3. **Carrito de Compras (`/carrito`, `/items-carrito`):** Lógica transaccional para agrupar productos antes de la compra.
+4. **Checkout y Envíos (`/pedidos`, `/pagos`):** Creación de órdenes y procesamiento simulado de pagos.
 
-### 🧾 Pedidos (`/pedidos`)
-* **Checkout:** Transformación de carrito a pedido confirmado.
-* **Historial:** Ver pedidos por usuario.
-* **Estados:** Gestión de estados del pedido (Iniciado, Cancelado, etc.).
-* **Cálculo:** Cálculo automático de totales.
+## 🛠️ Instalación y Despliegue Local
 
-### 💳 Pagos (`/pagos`)
-* Simulación de pasarelas de pago (PayPal, Visa, etc.).
-* Registro de transacciones asociadas a pedidos.
+El proyecto está dockerizado para garantizar que funcione en cualquier entorno sin configuraciones complejas.
 
-## ⚙️ Configuración del Proyecto
+### Requisitos previos
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado y en ejecución.
+* JDK 21 (Opcional, si deseas correrlo fuera del contenedor).
 
-### Prerrequisitos
-1.  Tener instalado **Java JDK 25**.
-2.  Tener instalado **PostgreSQL**.
-3.  Tener **Maven** instalado (o usar el wrapper `mvnw` incluido).
+### Pasos para ejecutar
 
-### Base de Datos
-Debes crear una base de datos en PostgreSQL llamada `ecomerceb`.
+1. **Clonar el repositorio:**
+   ```bash
+   git clone [https://github.com/tu-usuario/tu-repositorio.git](https://github.com/tu-usuario/tu-repositorio.git)
+   cd tu-repositorio
+Levantar la Infraestructura (Bases de datos y Broker):
+Asegúrate de estar en la carpeta donde está el archivo docker-compose.yml.
 
-La configuración se encuentra en `src/main/resources/application.properties`:
+```bash
 
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/ecomerceb
-spring.datasource.username=postgres
-spring.datasource.password=135790
-spring.jpa.hibernate.ddl-auto=update
-Asegúrate de cambiar username y password por tus credenciales locales.
+docker compose up -d
 ```
-🛠️ Instalación y Ejecución
-Clonar el repositorio:
+Esto descargará e iniciará automáticamente PostgreSQL, Redis y RabbitMQ en segundo plano.
 
-```
-Bash
+Ejecutar la aplicación Spring Boot:
 
-git clone [https://github.com/tu-usuario/ecommerce.git](https://github.com/tu-usuario/ecommerce.git)
-cd ecommerce
-```
-Compilar el proyecto:
-```
-Bash
-
-./mvnw clean install
-```
-Ejecutar la aplicación:
-
-```
-Bash
+```Bash
 
 ./mvnw spring-boot:run
 ```
-La API estará disponible en: http://localhost:8080
+📖 Documentación de la API (Swagger)
+Una vez que la aplicación esté corriendo, La documentación interactiva se genera automáticamente.
 
+URL de Swagger UI: http://localhost:8080/swagger-ui/index.html
 
-📂 Estructura del Proyecto
-El código sigue una Arquitectura por Capas limpia:
+Para probar: Ve al endpoint /auth/login o /auth/registro, obtén tu token JWT, haz clic en el botón verde "Authorize" en la parte superior derecha de Swagger, pega tu token con el prefijo Bearer  y podrás acceder a todos los endpoints protegidos.
+
+🧪 Pruebas y Calidad de Código (CI/CD)
+El proyecto cuenta con una extensa suite de pruebas unitarias enfocadas en la lógica de negocio (Capa de Servicios) utilizando JUnit y aislando la base de datos con Mockito.
+
+Para ejecutar las pruebas localmente:
+
+```Bash
+
+  ./mvnw clean test
 ```
-Plaintext
+Integración Continua (GitHub Actions)
+Cada push a la rama principal dispara un flujo de trabajo que levanta una máquina virtual en Ubuntu, instala Java 21 y ejecuta automáticamente todas las pruebas unitarias para garantizar la estabilidad del código antes de cualquier despliegue.
 
-src/main/java/com/Jesus/Ecommerce
-│
-├── 🎮 Controllers      # Puntos de entrada de la API (REST)
-├── 🧠 Services         # Lógica de negocio y validaciones
-├── 💾 Repositories     # Acceso a datos (Interfaces JPA)
-├── 📦 Models (Entity)  # Entidades de Base de Datos
-├── 📨 DTOs             # Objetos de transferencia de datos (Requests/Responses)
-├── 🗺️ Mappers          # Conversión Entidad <-> DTO (MapStruct)
-├── 🛡️ Configuracion    # Configuración de Security y Beans
-└── ⚠️ Exepciones       # Manejo global de errores (GlobalExceptionHandler)
-```
-🧪 Endpoints de Ejemplo
-Aquí tienes algunos ejemplos de cómo probar la API (usando Postman o cURL):
-```
-Crear un Producto (POST): http://localhost:8080/producto
-
-JSON
-
-{
-  "nombre": "Laptop Gamer",
-  "descripcion": "Alta gama",
-  "precio": 1500.00,
-  "cantidadStock": 10,
-  "categoriaID": 1
-}
-Registrar Usuario (POST): http://localhost:8080/usuario
-
-JSON
-
-{
-  "nombreUsuario": "jesusdev",
-  "contrasena": "Password123!",
-  "correoElectronico": "jesus@mail.com",
-  "nombreCompleto": "Jesus Developer",
-  "telefono": "5512345678",
-  "rol": "CLIENTE"
-}
-```
- Contribución
-¡Las contribuciones son bienvenidas! Por favor, abre un issue o envía un pull request para mejoras.
-
-Desarrollado por Jesus Negrete Calixtro
+Desarrollado por Jesús Negrete Calixtro
+Ingeniero de Software enfocado en el desarrollo Backend y Arquitecturas Escalables.
