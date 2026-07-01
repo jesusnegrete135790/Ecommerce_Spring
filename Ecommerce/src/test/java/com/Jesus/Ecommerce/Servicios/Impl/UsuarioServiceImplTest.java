@@ -45,10 +45,10 @@ class UsuarioServiceImplTest {
     Usuario usuario = new Usuario(1,"Usuario Prueba","Contraseña1","Usuario@gmail.com","Usuario Apellido","1234567890",LocalDateTime.now(),LocalDateTime.now(),"ADMIN");
     UsuarioResponseDTO responseDTO= new UsuarioResponseDTO(1,"Usuario Prueba","Usuario@gmail.com","Usuario apellido","123456789","ADMIN");
 
-    Usuario usuari2 = new Usuario(1,"Usuario Prueba2","Contraseña1","Usuario@gmail.com","Usuario Apellido","1234567890",LocalDateTime.now(),LocalDateTime.now(),"ADMIN");
+    Usuario usuari2 = new Usuario(1,"Usuario Prueba2","Contraseña1","Usuario@gmail.com","Usuario Apellido","1234567890",LocalDateTime.now(),LocalDateTime.now(),"User");
     UsuarioResponseSimpleDTO responseDTO2= new UsuarioResponseSimpleDTO(1,"Usuario Prueba");
 
-    Usuario usuario3 = new Usuario(1,"Usuario Prueba3","Contraseña1","Usuario@gmail.com","Usuario Apellido","1234567890",LocalDateTime.now(),LocalDateTime.now(),"ADMIN");
+    Usuario usuario3 = new Usuario(1,"Usuario Prueba3","Contraseña1","Usuario@gmail.com","Usuario Apellido","1234567890",LocalDateTime.now(),LocalDateTime.now(),"User");
     UsuarioResponseSimpleDTO responseDTO3= new UsuarioResponseSimpleDTO(1,"Usuario Prueba");
 
     List<UsuarioResponseSimpleDTO> ListaUsuarioResponseDTOSResultado=new ArrayList<>();
@@ -161,25 +161,26 @@ class UsuarioServiceImplTest {
             listaUsuario.add(usuari2);
             listaUsuario.add(usuario3);
 
-            ListaUsuarioResponseDTOS.add(responseDTO2);
+            /*ListaUsuarioResponseDTOS.add(responseDTO2);
             ListaUsuarioResponseDTOS.add(responseDTO3);
 
-
             ListaUsuarioResponseDTOSResultado.add(responseDTO2);
-            ListaUsuarioResponseDTOSResultado.add(responseDTO3);
+            ListaUsuarioResponseDTOSResultado.add(responseDTO3);*/
 
             when(usuarioRepository.findAll()).thenReturn(listaUsuario);
-            when(usuarioMapper.toSimpleDtoList(listaUsuario)).thenReturn(ListaUsuarioResponseDTOS);
 
-            List<UsuarioResponseSimpleDTO> Resultado =usuarioService.listarUsuarios();
+            when(usuarioMapper.toSimpleDto(usuari2)).thenReturn(responseDTO2);
+            when(usuarioMapper.toSimpleDto(usuario3)).thenReturn(responseDTO3);
+
+            List<UsuarioResponseSimpleDTO> Resultado = usuarioService.listarUsuarios();
 
            assertNotNull(Resultado);
            assertEquals(2,Resultado.size());
            assertEquals(responseDTO2.nombreUsuario(),Resultado.get(0).nombreUsuario());
            assertEquals(responseDTO3.nombreUsuario(),Resultado.get(1).nombreUsuario());
 
-            verify(usuarioRepository).findAll();
-            verify(usuarioMapper).toSimpleDtoList(listaUsuario);
+            verify(usuarioMapper).toSimpleDto(usuari2);
+            verify(usuarioMapper).toSimpleDto(usuario3);
         }
 
         @Test
@@ -187,7 +188,6 @@ class UsuarioServiceImplTest {
         void listarUsuariosVacia() {
 
             when(usuarioRepository.findAll()).thenReturn(listaUsuario);
-            when(usuarioMapper.toSimpleDtoList(listaUsuario)).thenReturn(ListaUsuarioResponseDTOS);
 
             List<UsuarioResponseSimpleDTO> Resultado =usuarioService.listarUsuarios();
 

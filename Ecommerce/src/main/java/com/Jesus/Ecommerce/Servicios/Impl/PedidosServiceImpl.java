@@ -158,15 +158,6 @@ public class PedidosServiceImpl implements PedidosService {
                             producto.setCantidadStock(itemsPedido.getCantidad()+producto.getCantidadStock());
                             return producto;
                         }).toList();
-
         productoRepository.saveAll(productosActualizados);
-
-        for (ItemsPedido item:itemsPedidos){
-            Producto producto = item.getProducto();
-
-            producto.setCantidadStock(producto.getCantidadStock() + item.getCantidad());
-            productoRepository.save(producto);
-        }
-
     }
 }

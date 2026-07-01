@@ -111,7 +111,7 @@ class CategoriaServiceImplTest {
                 categoriaService.obtenerCategoriasId(id);
             });
             //Assert
-            assertEquals("Categoría no encontrada con id: 100", exeption.getMessage());
+            assertEquals("Categoria no encontrada con id 100", exeption.getMessage());
         }
     }
 

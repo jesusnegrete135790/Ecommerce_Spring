@@ -251,9 +251,7 @@ class PedidosServiceImplTest {
 
             // Assert
             verify(pedidosRepository).delete(pedido);
-            verify(productoRepository).save(prod);
-
-            // Verificamos que el stock se restauró: 10 + 5 = 15
+            verify(productoRepository).saveAll(List.of(prod));
             assertEquals(15, prod.getCantidadStock());
         }
 
