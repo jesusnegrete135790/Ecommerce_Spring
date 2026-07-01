@@ -13,7 +13,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -61,9 +64,10 @@ public class UsuarioServiceImpl implements UsuarioService {
             usuarioExistente.setRol(dto.rol());
             usuarioExistente.setActualizado(LocalDateTime.now());
 
-            if (dto.contrasena() != null && !dto.contrasena().isEmpty()) {
-                usuarioExistente.setContrasena(passwordEncoder.encode(dto.contrasena()));
-            }
+            Optional.ofNullable(dto.contrasena())
+                    .filter(c -> !c.isEmpty())
+                    .map(passwordEncoder::encode)
+                    .ifPresent(usuarioExistente::setContrasena);
 
             Usuario usuarioActualizado = usuarioRepository.save(usuarioExistente);
             return usuarioMapper.toDto(usuarioActualizado);
@@ -79,7 +83,12 @@ public class UsuarioServiceImpl implements UsuarioService {
         @Override
         public List<UsuarioResponseSimpleDTO> listarUsuarios() {
             List<Usuario> usuarios = usuarioRepository.findAll();
-            return usuarioMapper.toSimpleDtoList(usuarios);
+
+            return usuarios.stream()
+                    .filter(usuario -> !"ADMIN".equals(usuario.getRol()))
+                    .sorted(Comparator.comparing(Usuario::getNombreUsuario))
+                    .map(usuarioMapper::toSimpleDto)
+                    .toList();
         }
 
         @Override

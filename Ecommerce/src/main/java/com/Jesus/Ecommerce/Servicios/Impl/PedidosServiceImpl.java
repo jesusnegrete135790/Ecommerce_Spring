@@ -79,15 +79,18 @@ public class PedidosServiceImpl implements PedidosService {
             throw new PagoRechazadoException("Pago no realizado");
         }
         // Restar stock
-        for (ItemsCarrito item:itemsCarrito){
-            Producto producto = item.getProducto();
-
-            if (producto.getCantidadStock()<item.getCantidad()){
-                throw new StockMenorACero("Stock insuficiente para el producto: " + producto.getNombre());
+        itemsCarrito.forEach(item -> {
+            if (item.getProducto().getCantidadStock() < item.getCantidad()) {
+                throw new StockMenorACero("Stock insuficiente para el producto: " + item.getProducto().getNombre());
             }
-            producto.setCantidadStock(producto.getCantidadStock()-item.getCantidad());
+        });
+
+        itemsCarrito.forEach(item -> {
+            Producto producto = item.getProducto();
+            producto.setCantidadStock(producto.getCantidadStock() - item.getCantidad());
             productoRepository.save(producto);
-        }
+        });
+
         System.out.println("Paso 4");
         // 5. Crear y Guardar el Pedido
         Pedidos pedido = new Pedidos();
@@ -123,10 +126,8 @@ public class PedidosServiceImpl implements PedidosService {
 
     @Override
     public PedidoResponseDTO obtenerPedidoPorId(Integer idPedido) {
-        Pedidos nuevo = pedidosRepository.findById(idPedido)
+        return pedidosRepository.findById(idPedido).map(pedidoMapper::toDto)
                 .orElseThrow(() -> new PedidoNoEncontrado("Pedido no encontrado"));
-
-        return pedidoMapper.toDto(nuevo);
     }
 
     @Override
@@ -136,18 +137,29 @@ public class PedidosServiceImpl implements PedidosService {
 
     @Override
     public PedidoResponseDTO actualizarEstado(Integer idPedido, String nuevoEstado) {
-        Pedidos nuevo = pedidosRepository.findById(idPedido)
+        return pedidosRepository.findById(idPedido)
+                .map(pedidos -> {
+                    pedidos.setEstado(nuevoEstado);
+                    pedidosRepository.save(pedidos);
+                    return pedidos;
+                })
+                .map(pedidoMapper::toDto)
                 .orElseThrow(() -> new PedidoNoEncontrado("Item no encontrado"));
-
-        nuevo.setEstado(nuevoEstado);
-        pedidosRepository.save(nuevo);
-        return pedidoMapper.toDto(nuevo);
     }
 
     @Override
     public void cancelarPedido(Integer idPedido) {
         pedidosRepository.delete(pedidosRepository.findById(idPedido).orElseThrow(() -> new PedidoNoEncontrado("Pedido no encontrado")));
         List<ItemsPedido> itemsPedidos = itemsPedidoRepository.findByPedidosId(idPedido);
+
+        List<Producto> productosActualizados =  itemsPedidos.stream()
+                        .map(itemsPedido -> {
+                            Producto producto = itemsPedido.getProducto();
+                            producto.setCantidadStock(itemsPedido.getCantidad()+producto.getCantidadStock());
+                            return producto;
+                        }).toList();
+
+        productoRepository.saveAll(productosActualizados);
 
         for (ItemsPedido item:itemsPedidos){
             Producto producto = item.getProducto();

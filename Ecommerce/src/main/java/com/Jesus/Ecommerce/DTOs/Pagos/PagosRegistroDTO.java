@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record PagosRegistroDTO(
+public record   PagosRegistroDTO(
          @NotBlank(message = "Debes seleccionar un metodo de pago")
          String metodoPago,
 

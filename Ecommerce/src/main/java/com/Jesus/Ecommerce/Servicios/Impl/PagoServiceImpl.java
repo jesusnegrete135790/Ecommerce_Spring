@@ -22,6 +22,11 @@ public class PagoServiceImpl implements PagosService {
     @Autowired
     private PagosMapper pagosMapper;
 
+
+    public PagoServiceImpl(PagosRepository pagosRepository, PagosMapper pagosMapper) {
+        this.pagosRepository = pagosRepository;
+    }
+
     @Override
     public Boolean PagoPaypal(BigDecimal cantidad) {
 

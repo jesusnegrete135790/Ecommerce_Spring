@@ -3,6 +3,7 @@ package com.Jesus.Ecommerce.Servicios.Impl;
 import com.Jesus.Ecommerce.DTOs.Categoria.CategoriaRegistroDTO;
 import com.Jesus.Ecommerce.DTOs.Categoria.CategoriaResponseDTO;
 import com.Jesus.Ecommerce.DTOs.Categoria.CategoriaResponseSimpleDTO;
+import com.Jesus.Ecommerce.Exepciones.CarritoExeptions.CarritoNoEncontrado;
 import com.Jesus.Ecommerce.Exepciones.CategoriaExeptions.CategoriaNoEncontradaExeption;
 import com.Jesus.Ecommerce.Exepciones.CategoriaExeptions.CategoriaPadreInvalida;
 import com.Jesus.Ecommerce.Mappers.CategoriaMapper;
@@ -16,6 +17,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoriaServiceImpl implements CategoriaService {
@@ -35,9 +37,9 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     public CategoriaResponseDTO obtenerCategoriasId(Integer id) {
-        Categoria categoria = categoriasRepository.findById(id)
-                .orElseThrow(() -> new CategoriaNoEncontradaExeption("Categoría no encontrada con id: " + id));
-        return categoriaMapper.toDto(categoriasRepository.findById(id).orElseThrow());
+        return  categoriasRepository.findById(id)
+                 .map(categoriaMapper::toDto)
+                 .orElseThrow(() -> new CategoriaNoEncontradaExeption("Categoria no encontrada con id "+ id));
     }
 
     @Override
@@ -69,18 +71,15 @@ public class CategoriaServiceImpl implements CategoriaService {
         //2 transforma a entidad
         categoriaMapper.updateFromDto(dto, categoriaExistente);
 
-        if (dto.categoriaPadreId() != null) {
-            // Validar que no sea padre de sí misma
-            if (dto.categoriaPadreId().equals(id)) {
+        Optional.ofNullable(dto.categoriaPadreId()).ifPresentOrElse(idPadre ->{
+            if (idPadre.equals(id)) {
                 throw new CategoriaPadreInvalida("Una categoría no puede ser su propio padre");
             }
-            // 3 busca el id de la categoria padre
-            Categoria nuevoPadre = categoriasRepository.findById(dto.categoriaPadreId())
+            Categoria nuevoPadre = categoriasRepository.findById(idPadre)
                     .orElseThrow(() -> new CategoriaNoEncontradaExeption("Categoría padre no encontrada"));
-            categoriaExistente.setCategoria(nuevoPadre);
-        } else {
-            categoriaExistente.setCategoria(null);
-        }
+                        categoriaExistente.setCategoria(nuevoPadre);}
+                ,() -> categoriaExistente.setCategoria(null));
+
 
         //4 guarda la entidad actualizada en la bd
         Categoria actualizada = categoriasRepository.save(categoriaExistente);

@@ -87,10 +87,7 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public Page<ProductoResponseDTO> getAllProducts(Pageable pageable) {
-
-        Page<Producto> productosPage = productoRepository.findAll(pageable);
-
-        return productosPage.map(producto -> productoMapper.toDto(producto));
+        return productoRepository.findAll(pageable).map(productoMapper::toDto);
     }
 
     @Override
@@ -107,30 +104,32 @@ public class ProductoServiceImpl implements ProductoService {
         if (stock < 0) {
             throw new StockMenorACero("La cantidad debe ser mayor o igual a 0");
         }
-        Producto producto = productoRepository.findById(idProducto)
+        return productoRepository.findById(idProducto)
+                .map(producto1 -> {
+                    producto1.setCantidadStock(stock);
+                    productoRepository.save(producto1);
+                    return producto1;
+                }).map(productoMapper::toDto)
                 .orElseThrow(() -> new ProductoNoEncontradoExeption("Producto no encontrado"));
-        producto.setCantidadStock(stock);
-        productoRepository.save(producto);
-        return productoMapper.toDto(producto);
     }
 
     @Override
     public Page<ProductoResponseSimpleDTO> ordenarCategoria(Integer idCategoria,Pageable pageable){
-        Page<Producto> productos = productoRepository.findByCategoriaId(idCategoria,pageable);
-        return productos.map(producto -> productoMapper.toSimpleDto(producto));
 
+        Page<Producto> productos = productoRepository.findByCategoriaId(idCategoria,pageable);
+        return productos.map(productoMapper ::toSimpleDto);
     }
 
     @Override
     public Page<ProductoResponseSimpleDTO> ordenarNombre(String nombre,Pageable pageable){
         Page<Producto> productos = productoRepository.findByNombreContaining(nombre,pageable);
-        return productos.map(producto -> productoMapper.toSimpleDto(producto));
+        return productos.map(productoMapper ::toSimpleDto);
     }
 
     @Override
     public Page<ProductoResponseSimpleDTO> ordenarDescripcion(String descripcion,Pageable pageable){
         Page<Producto> productos = productoRepository.findByDescripcionContaining(descripcion,pageable);
-        return productos.map(producto -> productoMapper.toSimpleDto(producto));
+        return productos.map(productoMapper ::toSimpleDto);
     }
     @Override
     public Page<ProductoResponseDTO> obtenerProductosPorUsuario(Integer usuarioId,Pageable pageable) {

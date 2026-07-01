@@ -2,6 +2,7 @@ package com.Jesus.Ecommerce.Servicios.Impl;
 
 
 import com.Jesus.Ecommerce.DTOs.Carrito.CarritoResponseDTO;
+import com.Jesus.Ecommerce.Exepciones.CarritoExeptions.CarritoNoEncontrado;
 import com.Jesus.Ecommerce.Exepciones.UsuarioExeptions.UsuarioNoEncontradoExepcion;
 import com.Jesus.Ecommerce.Mappers.CarritoMapper;
 import com.Jesus.Ecommerce.Modelos.Carrito;
@@ -29,18 +30,14 @@ public class CarritoServiceImpl implements CarritoService {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new UsuarioNoEncontradoExepcion("Usuario no encontrado"));
 
-
-        Optional<Carrito> carritoExistente = carritoRepository.findByUsuarioId(usuarioId);
-
-        if (carritoExistente.isPresent()) {
-
-            return carritoMapper.toDto(carritoExistente.get());
-        } else {
-            Carrito nuevoCarrito = new Carrito();
-            nuevoCarrito.setUsuario(usuario);
-            Carrito carritoGuardado = carritoRepository.save(nuevoCarrito);
-            return carritoMapper.toDto(carritoGuardado);
-        }
+        return carritoRepository.findByUsuarioId(usuarioId)
+                .map(carritoMapper ::toDto )
+                .orElseGet(() -> {
+                    Carrito nuevoCarrito = new Carrito();
+                    nuevoCarrito.setUsuario(usuario);
+                    Carrito carritoGuardado = carritoRepository.save(nuevoCarrito);
+                    return carritoMapper.toDto(carritoGuardado);
+                });
 
     }
 }

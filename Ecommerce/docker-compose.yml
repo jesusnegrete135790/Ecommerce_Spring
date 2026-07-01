@@ -1,5 +1,3 @@
-
-
 services:
 
   db-ecommerce:
@@ -26,9 +24,7 @@ services:
     image: rabbitmq:3-management
     container_name: ecommerce-rabbitmq
     ports:
-      # Puerto Spring
       - "5672:5672"
-      # Puerto interfaz gráfica
       - "15672:15672"
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}

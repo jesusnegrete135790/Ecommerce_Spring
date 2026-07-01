@@ -55,29 +55,20 @@ public class ItemCarritoServiceImpl implements ItemsCarritoService {
         // Verificar si ya existe
         Optional<ItemsCarrito> existente = itemsCarritoRepository.findByCarrito_IdAndProducto_Id(idCarrito, idProducto);
 
-        ItemsCarrito itemGuardado;
-
-        if (existente.isPresent()) {
-            // Actualizar existente
-            ItemsCarrito item = existente.get();
+        ItemsCarrito itemGuardado = itemsCarritoRepository.save(existente.map(item ->{
             int nuevaCantidad = item.getCantidad() + dto.cantidad();
             validarStock(producto, nuevaCantidad);
             item.setCantidad(nuevaCantidad);
-            itemGuardado = itemsCarritoRepository.save(item);
-        } else {
-            // Crear nuevo usando Mapper (parcialmente)
-            ItemsCarrito nuevoItem = itemCarritoMapper.toEntity(dto);
-            // Asignamos relaciones manualmente porque toEntity las ignora para forzar la búsqueda en BD
-            nuevoItem.setCarrito(carrito);
-            nuevoItem.setProducto(producto);
+            return item;
+        }).orElseGet(() -> {
+            ItemsCarrito item = itemCarritoMapper.toEntity(dto);
+            item.setCarrito(carrito);
+            item.setProducto(producto);
             validarStock(producto, dto.cantidad());
-
-            itemGuardado = itemsCarritoRepository.save(nuevoItem);
-        }
-
+            return item;
+        }));
         return itemCarritoMapper.toDto(itemGuardado);
     }
-
 
     @Override
     @Transactional
@@ -150,10 +141,8 @@ public class ItemCarritoServiceImpl implements ItemsCarritoService {
 
     public List<ItemCarritoResponseDTO> obtenerItemsPorCarrito(Integer idCarrito) {
         List<ItemsCarrito> items = itemsCarritoRepository.findByCarritoId(idCarrito);
-        // Convertimos la lista de Entidades a DTOs usando el mapper
         return items.stream()
-                .map(itemCarritoMapper::toDto)
-                .collect(Collectors.toList());
+                .map(itemCarritoMapper::toDto).toList();
     }
 
 }
